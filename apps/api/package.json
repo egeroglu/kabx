@@ -2,7 +2,7 @@
   "name": "@kabx/api",
   "version": "0.1.0",
   "private": true,
-  "description": "Kabx backend \u2014 API and worker processes",
+  "description": "Kabx backend — API and worker processes",
   "license": "UNLICENSED",
   "type": "module",
   "engines": {
@@ -45,6 +45,7 @@
     "bullmq": "^6.3.8",
     "drizzle-orm": "^0.45.3",
     "ioredis": "^6.0.0",
+    "jose": "^6.2.12",
     "pino": "^10.3.1",
     "postgres": "^3.4.9",
     "reflect-metadata": "^0.2.2",
