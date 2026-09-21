@@ -4,16 +4,13 @@ import type { Redis } from 'ioredis';
 
 import { AppConfig } from '../common/config/app-config.js';
 import { getRootLogger } from '../common/logging/logger.js';
-import { ALL_QUEUE_NAMES, type QueueName } from './queue.constants.js';
+import { ALL_QUEUE_NAMES, type QueueName, type QueueRegistry } from './queue.constants.js';
 import { createRedis } from './redis.connection.js';
 
 export const QUEUE_REDIS = Symbol('QUEUE_REDIS');
 export const QUEUE_REGISTRY = Symbol('QUEUE_REGISTRY');
 
-export type QueueRegistry = {
-  get(name: QueueName): Queue;
-  all(): Queue[];
-};
+export type { QueueRegistry };
 
 @Global()
 @Module({

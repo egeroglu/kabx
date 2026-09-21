@@ -4,7 +4,10 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppConfig } from './common/config/app-config.js';
 import { createRootLogger, getRootLogger, setRootLogger } from './common/logging/logger.js';
+import type { Database } from './db/client.js';
+import { DB } from './db/db.module.js';
 import { QueueName } from './queue/queue.constants.js';
+import { createAccountProcessor } from './queue/processors/account.processor.js';
 import { maintenanceProcessor } from './queue/processors/maintenance.processor.js';
 import { createRedis } from './queue/redis.connection.js';
 import { WorkerRuntime } from './queue/worker.runtime.js';
@@ -14,7 +17,7 @@ async function main(): Promise<void> {
   const config = AppConfig.fromProcessEnv();
   setRootLogger(createRootLogger(config.all));
 
-  // Worker'ın da DI konteyneri var: işlemciler servisleri buradan çözecek.
+  // Worker'ın da DI konteyneri var: işlemciler servisleri buradan çözer.
   const app = await NestFactory.createApplicationContext(WorkerModule, { bufferLogs: true });
   app.enableShutdownHooks();
 
@@ -27,8 +30,20 @@ async function main(): Promise<void> {
   );
 
   runtime.register({ queue: QueueName.MAINTENANCE, process: maintenanceProcessor });
+  runtime.register({
+    queue: QueueName.ACCOUNT,
+    process: createAccountProcessor({
+      db: app.get<Database>(DB),
+      exportTtlSeconds: config.get('DATA_EXPORT_TTL_SECONDS'),
+    }),
+    // Hesap silme ve dışa aktarma ağır ve nadir işler; düşük eşzamanlılık yeter.
+    concurrency: 2,
+  });
 
-  getRootLogger().info({ queues: [QueueName.MAINTENANCE] }, 'Kabx worker ayakta');
+  getRootLogger().info(
+    { queues: [QueueName.MAINTENANCE, QueueName.ACCOUNT] },
+    'Kabx worker ayakta',
+  );
 
   const shutdown = async (signal: string): Promise<void> => {
     getRootLogger().info({ signal }, 'worker kapatılıyor');

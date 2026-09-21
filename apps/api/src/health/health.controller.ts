@@ -6,6 +6,7 @@ import { ApiErrorResponse } from '../common/openapi/decorators.js';
 import { refOf } from '../common/openapi/registry.js';
 import { ErrorCode } from '../common/errors/error-codes.js';
 import { ApiResponse } from '@nestjs/swagger';
+import { Public } from '../modules/auth/guards/public.decorator.js';
 import {
   PostgresHealthIndicator,
   QueueHealthIndicator,
@@ -14,6 +15,8 @@ import {
 
 @ApiTags('health')
 @Controller('health')
+// Probe'lar orchestrator'dan gelir; token taşıyamazlar.
+@Public()
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
