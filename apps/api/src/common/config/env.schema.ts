@@ -20,6 +20,18 @@ const int = (def: number) => z.coerce.number().int().default(def);
 /** Dış servis modları: `mock` yerel geliştirme ve testler için anahtarsız çalışır. */
 const providerMode = z.enum(['mock', 'live']).default('mock');
 
+/** Virgülle ayrılmış listeyi diziye çevirir; boş girdi boş dizi. */
+const csv = () =>
+  z
+    .string()
+    .default('')
+    .transform((v) =>
+      v
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    );
+
 export const envSchema = z.object({
   // --- Çalışma ortamı ---
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -46,17 +58,29 @@ export const envSchema = z.object({
   QUEUE_PREFIX: z.string().default('kabx'),
   WORKER_CONCURRENCY: int(5),
 
-  // --- Kimlik doğrulama / oturum (Faz 1) ---
+  // --- Kimlik doğrulama / oturum ---
   JWT_ACCESS_SECRET: z.string().min(32).default('dev-only-access-secret-change-me-32+chars'),
   JWT_ACCESS_TTL_SECONDS: int(900), // 15 dk
   REFRESH_TOKEN_TTL_DAYS: int(60),
   JWT_ISSUER: z.string().default('kabx'),
   JWT_AUDIENCE: z.string().default('kabx-mobile'),
-  APPLE_CLIENT_ID: z.string().default(''),
-  GOOGLE_CLIENT_ID_IOS: z.string().default(''),
-  GOOGLE_CLIENT_ID_ANDROID: z.string().default(''),
+  /** Refresh token ve OTP kodlarını DB'ye yazmadan önce HMAC'lemek için (pepper). */
+  AUTH_HASH_SECRET: z.string().min(32).default('dev-only-auth-hash-secret-change-me-32ch'),
+  IDENTITY_PROVIDER_MODE: providerMode,
+  /** Sign in with Apple: kabul edilen aud değerleri (bundle ID / Services ID). */
+  APPLE_CLIENT_IDS: csv(),
+  /** Google Sign-In: kabul edilen aud değerleri (iOS, Android, varsa Web). */
+  GOOGLE_CLIENT_IDS: csv(),
   OTP_TTL_SECONDS: int(600),
   OTP_MAX_ATTEMPTS: int(5),
+  OTP_RESEND_COOLDOWN_SECONDS: int(60),
+
+  // --- KVKK / rıza ---
+  /** Aydınlatma metni ve açık rıza metninin yürürlükteki sürümü. */
+  CONSENT_PRIVACY_VERSION: z.string().default('2026-09-01'),
+  CONSENT_TERMS_VERSION: z.string().default('2026-09-01'),
+  /** Veri dışa aktarma linkinin geçerlilik süresi. */
+  DATA_EXPORT_TTL_SECONDS: int(86_400),
 
   // --- E-posta (Resend) ---
   EMAIL_PROVIDER: providerMode,
