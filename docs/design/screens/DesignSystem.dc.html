@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Kabx — Tasarım sistemi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+body{margin:0;background:#F5EFE6}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1080px; box-sizing: border-box; padding: 56px 64px; display: flex; flex-direction: column; gap: 36px; background: #F5EFE6; color: #1D1915; font-family: 'DM Sans', system-ui, sans-serif;">
+
+<header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C2461F;">Tasarım sistemi · v1</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 72px; font-weight: 800; letter-spacing: -0.035em; line-height: 0.9;">Kabx: Sıcak Atölye</h1>
+</div>
+<p style="margin: 0; max-width: 420px; font-size: 16px; line-height: 1.5; color: #6A6158;">Sıcak nötr zemin, mürekkep siyahı, mercan ve lila vurgu. Renk kıyafetlerden gelir; oyunsuluk hareketten, eğimlerden ve swipe hissinden.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px;">
+
+<section style="display: flex; flex-direction: column; gap: 18px;">
+<h2 style="margin: 0; font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;">Renkler</h2>
+<sc-for list="{{palettes}}" as="p" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; font-weight: 700; color: #6A6158;">{{p.t}}</span>
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;">
+<sc-for list="{{p.s}}" as="s" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="height: 64px; border-radius: 16px; background: {{s.h}}; border: 1px solid rgba(29,25,21,0.12);"></div>
+<span style="font-size: 12px; font-weight: 700;">{{s.n}}</span>
+<span style="font-size: 11px; color: #6A6158; font-family: ui-monospace, Menlo, monospace;">{{s.h}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 18px;">
+<h2 style="margin: 0; font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;">Tipografi</h2>
+<div style="padding: 24px; border-radius: 24px; background: #FFFCF7; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;"><span style="font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 44px; font-weight: 800; letter-spacing: -0.025em; line-height: 1;">Günaydın!</span><span style="font-size: 12px; color: #6A6158;">Ekran başlığı · Bricolage Grotesque 800 · 34–44</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;"><span style="font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: -0.01em;">Ofis günü, rahat şık</span><span style="font-size: 12px; color: #6A6158;">Kart başlığı · 700 · 22–26</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;"><span style="font-size: 16px;">Kaydır ya da dokun. Doğru cevap yok, sadece zevkin.</span><span style="font-size: 12px; color: #6A6158;">Gövde · DM Sans 400 · 15–16</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;"><span style="font-size: 13px; color: #6A6158;">Mart 2025’te eklendi · 1 kez giyildi</span><span style="font-size: 12px; color: #6A6158;">Açıklama · 13</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Bugünün kombini</span><span style="font-size: 12px; color: #6A6158;">Etiket · 700 · 12 büyük harf</span></div>
+</div>
+<p style="margin: 0; font-size: 13px; color: #6A6158;">İki font da Türkçe karakterleri (ğ ş ı İ ö ü ç) destekler.</p>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 18px;">
+<h2 style="margin: 0; font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;">Butonlar ve çipler</h2>
+<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+<button type="button" style="height: 52px; padding: 0 22px; border: none; border-radius: 16px; background: #1D1915; color: #F5EFE6; font-size: 16px; font-weight: 700;">Birincil</button>
+<button type="button" style="height: 52px; padding: 0 22px; border: 1.5px solid #1D1915; border-radius: 16px; background: transparent; color: #1D1915; font-size: 16px; font-weight: 600;">İkincil</button>
+<button type="button" style="height: 52px; padding: 0 22px; border: none; border-radius: 16px; background: #F0643A; color: #1D1915; font-size: 16px; font-weight: 800;">Vurgu</button>
+<button type="button" style="height: 44px; padding: 0 16px; border: 1.5px dashed #6A6158; border-radius: 14px; background: transparent; color: #1D1915; font-size: 14px; font-weight: 600;">+ Ekle</button>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<span style="padding: 7px 12px; border-radius: 999px; background: #1D1915; color: #F5EFE6; font-size: 13px; font-weight: 700;">Seçili</span>
+<span style="padding: 7px 12px; border-radius: 999px; background: #FFFCF7; border: 1px solid #E2D8C9; font-size: 13px; font-weight: 600;">Normal</span>
+<span style="padding: 4px 9px; border-radius: 999px; background: #F0643A; font-size: 11px; font-weight: 700;">Çok uyumlu</span>
+<span style="padding: 4px 9px; border-radius: 999px; background: #E9D8A6; font-size: 11px; font-weight: 700;">Uyumlu</span>
+<span style="padding: 4px 9px; border-radius: 999px; background: #E9E1F7; font-size: 11px; font-weight: 700;">Etiketleniyor…</span>
+<span style="padding: 4px 9px; border-radius: 999px; background: #FBE3D6; font-size: 11px; font-weight: 700;">Benzeri var</span>
+</div>
+<div style="display: flex; align-items: center; gap: 22px;">
+<button type="button" aria-label="Beğenmedim" style="width: 64px; height: 64px; border-radius: 999px; border: 1.5px solid #1D1915; background: #FFFCF7; display: flex; align-items: center; justify-content: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+<button type="button" aria-label="Geri al" style="width: 46px; height: 46px; border-radius: 999px; border: none; background: #EDE5D8; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"></path></svg></button>
+<button type="button" aria-label="Beğendim" style="width: 64px; height: 64px; border-radius: 999px; border: none; background: #F0643A; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px rgba(240,100,58,0.35);"><svg width="28" height="28" viewBox="0 0 24 24" fill="#1D1915" aria-hidden="true"><path d="M12 20.5s-7.2-4.5-9.2-9.2A4.9 4.9 0 0 1 12 8a4.9 4.9 0 0 1 9.2 3.3c-2 4.7-9.2 9.2-9.2 9.2z"></path></svg></button>
+<span style="font-size: 13px; color: #6A6158;">Swipe aksiyonları: 64 / 46 / 64 px</span>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 18px;">
+<h2 style="margin: 0; font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;">Şekil ve kurallar</h2>
+<div style="display: flex; gap: 12px; align-items: flex-end;">
+<sc-for list="{{radii}}" as="r" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+<div style="width: 64px; height: 64px; background: #FFFCF7; border: 1.5px solid #1D1915; border-radius: {{r.v}};"></div>
+<span style="font-size: 11px; font-weight: 700;">{{r.t}}</span>
+</div>
+</sc-for>
+</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.4;">
+<li><strong>Kıyafet kahramandır.</strong> Arayüz nötr kalır; renk parçalardan gelir.</li>
+<li><strong>Oyunsuluk hareketten gelir.</strong> Swipe fiziği, haptik, kartlarda 1–4° eğim.</li>
+<li><strong>Mercan zeminde metin siyahtır.</strong> Mercanı metin olarak kullanırken #C2461F.</li>
+<li><strong>Dokunma alanı en az 44 px.</strong> Metin kontrastı en az 4.5:1.</li>
+</ul>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      palettes: [
+        { t: 'Açık mod', s: [ { n: 'Zemin', h: '#F5EFE6' }, { n: 'Yüzey', h: '#FFFCF7' }, { n: 'Sahne', h: '#EDE5D8' }, { n: 'Çizgi', h: '#E2D8C9' }, { n: 'İkincil metin', h: '#6A6158' }, { n: 'Mürekkep', h: '#1D1915' } ] },
+        { t: 'Koyu mod', s: [ { n: 'Zemin', h: '#15120F' }, { n: 'Yüzey', h: '#211D18' }, { n: 'Sahne', h: '#2C2721' }, { n: 'Çizgi', h: '#37302A' }, { n: 'İkincil metin', h: '#A99F93' }, { n: 'Mürekkep', h: '#F3ECE2' } ] },
+        { t: 'Vurgular ve yüzey tonları', s: [ { n: 'Mercan', h: '#F0643A' }, { n: 'Mercan metin', h: '#C2461F' }, { n: 'Lila', h: '#A99BF5' }, { n: 'Lila açık', h: '#E9E1F7' }, { n: 'Kum', h: '#E9D8A6' }, { n: 'Şeftali', h: '#FBE3D6' } ] }
+      ],
+      radii: [ { t: '12', v: '12px' }, { t: '16', v: '16px' }, { t: '20', v: '20px' }, { t: '28', v: '28px' }, { t: 'Hap', v: '999px' } ]
+    };
+  }
+}
+</script>
+</body>
+</html>

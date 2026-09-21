@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Kabx — Keşfet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+body{margin:0;background:#F5EFE6}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; padding: 60px 16px 0; display: flex; flex-direction: column; gap: 14px; background: #F5EFE6; color: #1D1915; font-family: 'DM Sans', system-ui, sans-serif;">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 0 4px;">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;">Keşfet</h1>
+<button type="button" aria-label="Filtreler" style="width: 44px; height: 44px; border-radius: 14px; border: 1px solid #E2D8C9; background: #FFFCF7; display: flex; align-items: center; justify-content: center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>
+</button>
+</header>
+
+<nav aria-label="Swipe modu" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: #EDE5D8;">
+<a href="#" aria-current="page" style="height: 38px; border-radius: 12px; background: #1D1915; color: #F5EFE6; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; text-decoration: none;">Stil</a>
+<a href="Wishlist.dc.html" style="height: 38px; border-radius: 12px; color: #1D1915; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; text-decoration: none;">Wishlist</a>
+<a href="Cleanup.dc.html" style="height: 38px; border-radius: 12px; color: #1D1915; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; text-decoration: none;">Temizlik</a>
+</nav>
+
+<div style="position: relative; height: 470px;">
+<div aria-hidden="true" style="position: absolute; inset: 14px 10px -6px; border-radius: 30px; background: #A99BF5; transform: rotate(4deg);"></div>
+<div aria-hidden="true" style="position: absolute; inset: 8px 4px 0; border-radius: 30px; background: #E9D8A6; transform: rotate(-3deg);"></div>
+<article style="position: absolute; inset: 0; border-radius: 30px; background: #FFFCF7; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 16px 36px rgba(29,25,21,0.14);">
+<div style="height: 340px; position: relative; background: {{look.stage}};">
+<sc-for list="{{look.items}}" as="g" hint-placeholder-count="4">
+<svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; left: {{g.x}}px; top: {{g.y}}px; width: {{g.s}}px; height: {{g.s}}px; transform: rotate({{g.r}}deg); filter: drop-shadow(0 8px 12px rgba(29,25,21,0.2));"><path d="{{g.d}}" fill="{{g.c}}" stroke="#1D1915" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+</sc-for>
+<span style="position: absolute; left: 14px; top: 14px; padding: 6px 10px; border-radius: 999px; background: #FFFCF7; font-size: 12px; font-weight: 700;">{{look.source}}</span>
+<span style="position: absolute; right: 14px; top: 14px; padding: 6px 10px; border-radius: 999px; background: #1D1915; color: #F5EFE6; font-size: 12px; font-weight: 700;">{{look.pos}}</span>
+</div>
+<div style="padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: -0.01em;">{{look.title}}</h2>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;">
+<sc-for list="{{look.tags}}" as="t" hint-placeholder-count="3">
+<span style="padding: 5px 10px; border-radius: 999px; background: #F5EFE6; font-size: 12px; font-weight: 600;">{{t}}</span>
+</sc-for>
+</div>
+</div>
+</article>
+</div>
+
+<div style="display: flex; align-items: center; justify-content: center; gap: 22px;">
+<button type="button" onClick="{{nope}}" aria-label="Beğenmedim" style="width: 64px; height: 64px; border-radius: 999px; border: 1.5px solid #1D1915; background: #FFFCF7; display: flex; align-items: center; justify-content: center;">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+<button type="button" onClick="{{undo}}" aria-label="Geri al" style="width: 46px; height: 46px; border-radius: 999px; border: none; background: #EDE5D8; display: flex; align-items: center; justify-content: center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"></path></svg>
+</button>
+<button type="button" onClick="{{like}}" aria-label="Beğendim" style="width: 64px; height: 64px; border-radius: 999px; border: none; background: #F0643A; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px rgba(240,100,58,0.35);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="#1D1915" aria-hidden="true"><path d="M12 20.5s-7.2-4.5-9.2-9.2A4.9 4.9 0 0 1 12 8a4.9 4.9 0 0 1 9.2 3.3c-2 4.7-9.2 9.2-9.2 9.2z"></path></svg>
+</button>
+</div>
+
+<div style="position: absolute; left: 0; bottom: 0;">
+<dc-import name="TabBar" active="discover" hint-size="390px,88px"></dc-import>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { i: 0 }; }
+  renderVals() {
+    const P = {
+      tee: 'M32 14 L44 9 Q50 16 56 9 L68 14 L84 30 L74 40 L68 34 L68 90 L32 90 L32 34 L26 40 L16 30 Z',
+      shirt: 'M33 12 L44 8 L50 18 L56 8 L67 12 L86 34 L78 42 L68 32 L68 92 L32 92 L32 32 L22 42 L14 34 Z',
+      knit: 'M32 12 L44 8 Q50 14 56 8 L68 12 L88 62 L78 66 L68 38 L68 90 L32 90 L32 38 L22 66 L12 62 Z',
+      skirt: 'M33 14 L67 14 L82 84 L18 84 Z',
+      jeans: 'M30 8 L70 8 L77 92 L58 92 L50 36 L42 92 L23 92 Z',
+      dress: 'M41 6 L59 6 L57 26 L76 92 L24 92 L43 26 Z',
+      sneaker: 'M8 62 Q10 44 26 44 L40 50 Q58 58 80 59 Q94 61 94 72 L94 80 L8 80 Z',
+      loafer: 'M10 66 Q14 52 30 54 L60 58 Q86 60 90 70 L90 78 L10 78 Z',
+      bag: 'M22 40 L78 40 L84 90 L16 90 Z M36 40 Q36 18 50 18 Q64 18 64 40 L60 40 Q60 22 50 22 Q40 22 40 40 Z'
+    };
+    const looks = [
+      { title: 'Hafta sonu brunch', source: 'Editör kombini', stage: '#E9E1F7', tags: ['Clean girl', 'Rahat', 'İlkbahar'],
+        items: [ { d: P.knit, c: '#F4E9D8', x: 20, y: 24, s: 170, r: -5 }, { d: P.skirt, c: '#9C7A5B', x: 176, y: 70, s: 150, r: 4 }, { d: P.loafer, c: '#1D1915', x: 44, y: 206, s: 120, r: -3 }, { d: P.bag, c: '#F0643A', x: 214, y: 218, s: 104, r: 8 } ] },
+      { title: 'Şehirde Y2K', source: 'Mağazadan', stage: '#FBE3D6', tags: ['Y2K', 'Renkli', 'Yaz'],
+        items: [ { d: P.tee, c: '#A99BF5', x: 30, y: 20, s: 160, r: 6 }, { d: P.jeans, c: '#7FA3D6', x: 180, y: 44, s: 150, r: -4 }, { d: P.sneaker, c: '#FFFFFF', x: 40, y: 210, s: 130, r: 0 } ] },
+      { title: 'Akşam yemeği', source: 'Editör kombini', stage: '#E6EEDC', tags: ['Minimal', 'Şık', 'Sonbahar'],
+        items: [ { d: P.dress, c: '#2F3B2C', x: 40, y: 20, s: 200, r: -3 }, { d: P.loafer, c: '#B24A2E', x: 206, y: 196, s: 118, r: 5 }, { d: P.bag, c: '#E9D8A6', x: 220, y: 60, s: 96, r: 10 } ] }
+    ];
+    const i = this.state.i % looks.length;
+    const next = () => this.setState({ i: this.state.i + 1 });
+    return {
+      look: { ...looks[i], pos: (i + 1) + ' / ' + looks.length },
+      like: next,
+      nope: next,
+      undo: () => this.setState({ i: Math.max(0, this.state.i - 1) })
+    };
+  }
+}
+</script>
+</body>
+</html>

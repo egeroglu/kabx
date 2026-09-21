@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Kabx — Stil sonucu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+body{margin:0;background:#1D1915}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; padding: 64px 20px 0; display: flex; flex-direction: column; gap: 18px; background: #1D1915; color: #F5EFE6; font-family: 'DM Sans', system-ui, sans-serif;">
+
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #F0643A;">20 kombinden sonra stilin</span>
+
+<article style="border-radius: 32px; background: #F5EFE6; color: #1D1915; padding: 22px 20px 20px; display: flex; flex-direction: column; gap: 16px; transform: rotate(-1.5deg); box-shadow: 0 24px 50px rgba(0,0,0,0.35);">
+<div style="display: flex; flex-direction: column; gap: 0;">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 52px; font-weight: 800; letter-spacing: -0.03em; line-height: 0.95;">Clean Girl</h1>
+<span style="font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 34px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.05;">+ bir tutam <span style="background: #A99BF5; padding: 0 6px; border-radius: 8px;">Y2K</span></span>
+</div>
+<div style="height: 150px; border-radius: 22px; background: #EDE5D8; position: relative; overflow: hidden;">
+<svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; left: 10px; top: 10px; width: 130px; height: 130px; transform: rotate(-6deg);"><path d="M32 12 L44 8 Q50 14 56 8 L68 12 L88 62 L78 66 L68 38 L68 90 L32 90 L32 38 L22 66 L12 62 Z" fill="#F4E9D8" stroke="#1D1915" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+<svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; left: 118px; top: 16px; width: 120px; height: 120px; transform: rotate(4deg);"><path d="M30 8 L70 8 L77 92 L58 92 L50 36 L42 92 L23 92 Z" fill="#7FA3D6" stroke="#1D1915" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+<svg viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; left: 222px; top: 40px; width: 100px; height: 100px; transform: rotate(-3deg);"><path d="M8 62 Q10 44 26 44 L40 50 Q58 58 80 59 Q94 61 94 72 L94 80 L8 80 Z" fill="#FFFFFF" stroke="#1D1915" stroke-width="2" stroke-linejoin="round"></path></svg>
+</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{mix}}" as="m" hint-placeholder-count="4">
+<li style="display: flex; align-items: center; gap: 10px;">
+<span style="width: 96px; font-size: 14px; font-weight: 700;">{{m.t}}</span>
+<span style="flex-grow: 1; height: 12px; border-radius: 999px; background: #E2D8C9; overflow: hidden;"><span style="display: block; width: {{m.v}}%; height: 12px; border-radius: 999px; background: {{m.c}};"></span></span>
+<span style="width: 38px; text-align: right; font-size: 13px; font-weight: 700;">%{{m.v}}</span>
+</li>
+</sc-for>
+</ul>
+</article>
+
+<p style="margin: 0; font-size: 15px; line-height: 1.45; color: #D9CFC2;">Sade temeller, nötr tonlar ve arada bir renkli sürpriz. Keşfet'i bu zevke göre ayarladık, ama arada farklı stiller de göstereceğiz.</p>
+
+<div style="position: absolute; left: 20px; right: 20px; bottom: 28px; display: flex; flex-direction: column; gap: 10px;">
+<a href="Paywall.dc.html" style="height: 56px; border-radius: 18px; background: #F0643A; color: #1D1915; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; text-decoration: none;">Gardırobumu kuralım</a>
+<button type="button" style="height: 48px; border-radius: 16px; border: 1.5px solid #6A6158; background: transparent; color: #F5EFE6; font-size: 15px; font-weight: 600;">Stil kartımı paylaş</button>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      mix: [
+        { t: 'Clean girl', v: 46, c: '#1D1915' },
+        { t: 'Y2K', v: 28, c: '#A99BF5' },
+        { t: 'Minimal', v: 16, c: '#C99A6B' },
+        { t: 'Sporty', v: 10, c: '#F0643A' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

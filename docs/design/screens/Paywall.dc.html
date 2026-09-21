@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Kabx — Abonelik</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+body{margin:0;background:#F5EFE6}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; padding: 56px 20px 0; display: flex; flex-direction: column; gap: 18px; background: #F5EFE6; color: #1D1915; font-family: 'DM Sans', system-ui, sans-serif;">
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="padding: 6px 10px; border-radius: 999px; background: #A99BF5; font-size: 12px; font-weight: 800;">Stilin: Clean Girl + Y2K</span>
+<button type="button" aria-label="Kapat" style="width: 44px; height: 44px; border-radius: 999px; border: none; background: #EDE5D8; display: flex; align-items: center; justify-content: center;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+</div>
+
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 36px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.02;">Gardırobun artık cebinde. <span style="color: #C2461F;">7 gün bizden.</span></h1>
+
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px;">
+<sc-for list="{{perks}}" as="p" hint-placeholder-count="4">
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600;">
+<span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 10px; background: #1D1915; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F5EFE6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+{{p}}
+</li>
+</sc-for>
+</ul>
+
+<div role="radiogroup" aria-label="Plan seç" style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{plans}}" as="pl" hint-placeholder-count="2">
+<button type="button" role="radio" aria-checked="{{pl.on}}" onClick="{{pl.pick}}" style="position: relative; min-height: 76px; box-sizing: border-box; padding: 14px 16px; border-radius: 20px; border: {{pl.border}}; background: #FFFCF7; display: flex; align-items: center; gap: 14px; text-align: left; color: #1D1915;">
+<span style="width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; border: 2px solid #1D1915; display: flex; align-items: center; justify-content: center;"><span style="width: 12px; height: 12px; border-radius: 999px; background: {{pl.dot}};"></span></span>
+<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+<span style="font-size: 16px; font-weight: 800;">{{pl.name}}</span>
+<span style="font-size: 13px; color: #6A6158;">{{pl.sub}}</span>
+</span>
+<span style="font-size: 16px; font-weight: 800;">{{pl.price}}</span>
+<sc-if value="{{pl.badge}}" hint-placeholder-val="{{false}}">
+<span style="position: absolute; right: 14px; top: -10px; padding: 4px 9px; border-radius: 999px; background: #F0643A; font-size: 11px; font-weight: 800;">{{pl.badge}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 20px; right: 20px; bottom: 24px; display: flex; flex-direction: column; gap: 10px;">
+<a href="Today.dc.html" style="height: 58px; border-radius: 18px; background: #1D1915; color: #F5EFE6; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; text-decoration: none;">7 gün ücretsiz başla</a>
+<p style="margin: 0; font-size: 11.5px; line-height: 1.4; color: #6A6158; text-align: center;">Deneme bitince seçtiğin plan App Store / Google Play hesabından ücretlendirilir. Bitmeden istediğin zaman iptal edebilirsin.</p>
+<div style="display: flex; justify-content: center; gap: 18px;">
+<a href="#" style="font-size: 12px; font-weight: 600; color: #1D1915; padding: 6px 0;">Satın alımı geri yükle</a>
+<a href="#" style="font-size: 12px; font-weight: 600; color: #1D1915; padding: 6px 0;">Koşullar</a>
+<a href="#" style="font-size: 12px; font-weight: 600; color: #1D1915; padding: 6px 0;">Gizlilik</a>
+</div>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { plan: 'y' }; }
+  renderVals() {
+    const defs = [
+      { id: 'y', name: 'Yıllık', sub: 'Aylık 158,33 TL’ye denk', price: '1.899,99 TL', badge: '%20 indirim' },
+      { id: 'm', name: 'Aylık', sub: 'İstediğin zaman iptal', price: '199,99 TL', badge: '' }
+    ];
+    return {
+      perks: [
+        'Sınırsız swipe ile stil keşfi',
+        'Akıllı sıralamalı kombin oluşturucu',
+        'Her sabah havaya göre bugünün kombini',
+        'Wishlist ve gardırop temizliği modları'
+      ],
+      plans: defs.map((d) => {
+        const on = this.state.plan === d.id;
+        return { ...d, on: on ? 'true' : 'false', border: on ? '2.5px solid #1D1915' : '1px solid #E2D8C9', dot: on ? '#F0643A' : 'transparent', pick: () => this.setState({ plan: d.id }) };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

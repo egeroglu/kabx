@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Kabx — Alt menü</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<nav aria-label="Ana menü" style="width: 390px; height: 88px; box-sizing: border-box; padding: 8px 12px 22px; display: flex; align-items: flex-end; justify-content: space-between; background: {{bg}}; border-top: 1px solid {{line}}; font-family: 'DM Sans', system-ui, sans-serif;">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<sc-if value="{{t.center}}" hint-placeholder-val="{{false}}">
+<a href="{{t.href}}" aria-label="{{t.label}}" style="width: 64px; height: 64px; margin-bottom: 2px; border-radius: 22px; background: #F0643A; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 8px 20px rgba(240,100,58,0.35); transform: rotate(-4deg);">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="11" height="15" rx="2.5"></rect><path d="M9 3.5l8.6 1.6a2.4 2.4 0 0 1 1.9 2.8l-2 10.6"></path></svg>
+</a>
+</sc-if>
+<sc-if value="{{t.plain}}" hint-placeholder-val="{{true}}">
+<a href="{{t.href}}" style="width: 64px; height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{t.color}}; font-size: 11px; font-weight: {{t.weight}};">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{t.sw}}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.icon}}"></path></svg>
+<span>{{t.label}}</span>
+</a>
+</sc-if>
+</sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["today","wardrobe","discover","outfits","profile"],"default":"today"},"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":88}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'today';
+    const dark = this.props.dark ?? false;
+    const ink = dark ? '#F3ECE2' : '#1D1915';
+    const muted = dark ? '#A99F93' : '#6A6158';
+    const defs = [
+      { id: 'today', label: 'Bugün', href: 'Today.dc.html', icon: 'M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4' },
+      { id: 'wardrobe', label: 'Gardırop', href: 'Wardrobe.dc.html', icon: 'M12 7a2 2 0 1 1 2-2M12 7v1.6L3.4 14.8A1.6 1.6 0 0 0 4.3 17.8h15.4a1.6 1.6 0 0 0 .9-3L12 8.6' },
+      { id: 'discover', label: 'Keşfet', href: 'Discover.dc.html', center: true },
+      { id: 'outfits', label: 'Kombinler', href: 'OutfitBuilder.dc.html', icon: 'M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5M3 17.5l9 5 9-5' },
+      { id: 'profile', label: 'Profil', href: '#', icon: 'M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6' }
+    ];
+    return {
+      bg: dark ? '#1B1814' : '#FFFCF7',
+      line: dark ? '#37302A' : '#E2D8C9',
+      tabs: defs.map((d) => ({
+        ...d,
+        center: !!d.center,
+        plain: !d.center,
+        color: d.id === active ? ink : muted,
+        weight: d.id === active ? 700 : 500,
+        sw: d.id === active ? 2.2 : 1.7
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

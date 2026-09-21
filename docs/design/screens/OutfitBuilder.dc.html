@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Kabx — Kombin oluşturucu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+body{margin:0;background:#F5EFE6}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; padding: 60px 0 0; display: flex; flex-direction: column; gap: 14px; background: #F5EFE6; color: #1D1915; font-family: 'DM Sans', system-ui, sans-serif;">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+<a href="Today.dc.html" aria-label="Kapat" style="width: 44px; height: 44px; border-radius: 14px; background: #FFFCF7; border: 1px solid #E2D8C9; display: flex; align-items: center; justify-content: center;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D1915" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</a>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, serif; font-size: 22px; font-weight: 700;">Yeni kombin</h1>
+<button type="button" style="height: 44px; padding: 0 14px; border: none; background: transparent; color: #1D1915; font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px;">Taslak</button>
+</header>
+
+<div style="margin: 0 16px; padding: 12px 14px; border-radius: 16px; background: #E9E1F7; display: flex; gap: 10px; align-items: center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#1D1915" aria-hidden="true" style="flex-shrink: 0;"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>
+<span style="font-size: 13px; line-height: 1.35;"><strong>Resmi bir gömlek seçtin.</strong> Alt ve ayakkabıda resmi parçalar önde.</span>
+</div>
+
+<sc-for list="{{slots}}" as="slot" hint-placeholder-count="3">
+<section aria-label="{{slot.label}}" style="display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; align-items: baseline; justify-content: space-between; padding: 0 20px;">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700;">{{slot.label}}</h2>
+<span style="font-size: 12px; color: #6A6158;">{{slot.hint}}</span>
+</div>
+<div style="display: flex; gap: 10px; padding: 0 16px; overflow: hidden;">
+<sc-for list="{{slot.items}}" as="it" hint-placeholder-count="4">
+<button type="button" aria-label="{{it.name}}" style="flex-shrink: 0; width: 100px; height: 100px; box-sizing: border-box; border-radius: 20px; background: #FFFCF7; border: {{it.border}}; position: relative; display: flex; align-items: center; justify-content: center; padding: 0; opacity: {{it.op}};">
+<svg viewBox="0 0 100 100" width="70" height="70" aria-hidden="true"><path d="{{it.d}}" fill="{{it.c}}" stroke="#1D1915" stroke-width="2.2" stroke-linejoin="round"></path></svg>
+<sc-if value="{{it.sel}}" hint-placeholder-val="{{false}}">
+<span style="position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 999px; background: #1D1915; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F5EFE6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+</sc-if>
+<sc-if value="{{it.badge}}" hint-placeholder-val="{{false}}">
+<span style="position: absolute; left: 6px; bottom: 6px; padding: 3px 7px; border-radius: 999px; background: {{it.badgeBg}}; font-size: 10px; font-weight: 700; color: #1D1915;">{{it.badge}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+<div style="display: flex; gap: 8px; padding: 0 16px;">
+<button type="button" style="flex: 1 1 0; height: 44px; border-radius: 14px; border: 1.5px dashed #6A6158; background: transparent; color: #1D1915; font-size: 14px; font-weight: 600;">+ Dış giyim</button>
+<button type="button" style="flex: 1 1 0; height: 44px; border-radius: 14px; border: 1.5px dashed #6A6158; background: transparent; color: #1D1915; font-size: 14px; font-weight: 600;">+ Çanta / aksesuar</button>
+</div>
+
+<div style="display: flex; gap: 6px; padding: 0 16px; flex-wrap: wrap;">
+<span style="padding: 7px 12px; border-radius: 999px; background: #1D1915; color: #F5EFE6; font-size: 13px; font-weight: 700;">İş</span>
+<span style="padding: 7px 12px; border-radius: 999px; background: #FFFCF7; border: 1px solid #E2D8C9; font-size: 13px; font-weight: 600;">Günlük</span>
+<span style="padding: 7px 12px; border-radius: 999px; background: #FFFCF7; border: 1px solid #E2D8C9; font-size: 13px; font-weight: 600;">Davet</span>
+<span style="padding: 7px 12px; border-radius: 999px; background: #FFFCF7; border: 1px solid #E2D8C9; font-size: 13px; font-weight: 600;">Buluşma</span>
+</div>
+
+<button type="button" style="position: absolute; left: 16px; right: 16px; bottom: 28px; height: 56px; border: none; border-radius: 18px; background: #1D1915; color: #F5EFE6; font-size: 16px; font-weight: 700;">Kombini kaydet</button>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = {
+      shirt: 'M33 12 L44 8 L50 18 L56 8 L67 12 L86 34 L78 42 L68 32 L68 92 L32 92 L32 32 L22 42 L14 34 Z',
+      tee: 'M32 14 L44 9 Q50 16 56 9 L68 14 L84 30 L74 40 L68 34 L68 90 L32 90 L32 34 L26 40 L16 30 Z',
+      knit: 'M32 12 L44 8 Q50 14 56 8 L68 12 L88 62 L78 66 L68 38 L68 90 L32 90 L32 38 L22 66 L12 62 Z',
+      pants: 'M30 8 L70 8 L75 92 L57 92 L50 34 L43 92 L25 92 Z',
+      skirt: 'M33 14 L67 14 L82 84 L18 84 Z',
+      jeans: 'M30 8 L70 8 L77 92 L58 92 L50 36 L42 92 L23 92 Z',
+      loafer: 'M10 66 Q14 52 30 54 L60 58 Q86 60 90 70 L90 78 L10 78 Z',
+      sneaker: 'M8 62 Q10 44 26 44 L40 50 Q58 58 80 59 Q94 61 94 72 L94 80 L8 80 Z'
+    };
+    const sel = '2.5px solid #1D1915';
+    const off = '1px solid #E2D8C9';
+    const item = (name, d, c, o) => ({ name, d, c, border: o.sel ? sel : off, sel: !!o.sel, badge: o.badge || '', badgeBg: o.bg || '#F5EFE6', op: o.low ? 0.5 : 1 });
+    return {
+      slots: [
+        { label: 'Üst', hint: 'Seçildi', items: [
+          item('Beyaz poplin gömlek', P.shirt, '#FFFFFF', { sel: true }),
+          item('Krem triko', P.knit, '#F4E9D8', {}),
+          item('Lila tişört', P.tee, '#A99BF5', {}),
+          item('Siyah tişört', P.tee, '#2A2420', {})
+        ] },
+        { label: 'Alt', hint: 'Uyuma göre sıralı', items: [
+          item('Siyah kumaş pantolon', P.pants, '#2A2420', { badge: 'Çok uyumlu', bg: '#F0643A' }),
+          item('Bej kalem etek', P.skirt, '#C99A6B', { badge: 'Uyumlu', bg: '#E9D8A6' }),
+          item('Açık mavi jean', P.jeans, '#7FA3D6', { badge: 'Uyumlu', bg: '#E9D8A6' }),
+          item('Kargo pantolon', P.pants, '#7C8A5A', { low: true })
+        ] },
+        { label: 'Ayakkabı', hint: 'Yağmur yok, süet olur', items: [
+          item('Siyah loafer', P.loafer, '#1D1915', { badge: 'Çok uyumlu', bg: '#F0643A' }),
+          item('Taba loafer', P.loafer, '#9C5A34', { badge: 'Uyumlu', bg: '#E9D8A6' }),
+          item('Beyaz sneaker', P.sneaker, '#FFFFFF', {}),
+          item('Spor ayakkabı', P.sneaker, '#A99BF5', { low: true })
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
