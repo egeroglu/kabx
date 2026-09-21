@@ -15,6 +15,23 @@ export interface ZodDtoStatic<TOutput = unknown, TInput = TOutput> {
   isZodDto: true;
 }
 
+/**
+ * KULLANIM — sınıf olarak türetilmeli:
+ *
+ * ```ts
+ * export class AppleSignInDto extends createZodDto('AppleSignInInput', schema) {}
+ * ```
+ *
+ * ve controller'da parametre tipi olarak bu SINIF yazılmalı:
+ *
+ * ```ts
+ * signIn(@Body() body: AppleSignInDto) { ... }
+ * ```
+ *
+ * Parametreye `z.infer<typeof schema>` gibi bir TİP yazmak sessizce
+ * doğrulamayı devre dışı bırakır: `emitDecoratorMetadata` tip takma adlarını
+ * `Object` olarak yayar, pipe DTO'yu tanıyamaz ve gövde hiç doğrulanmaz.
+ */
 export function createZodDto<TOutput, TInput>(
   schemaName: string,
   schema: ZodType<TOutput, TInput>,
