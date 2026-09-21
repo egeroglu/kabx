@@ -1,0 +1,127 @@
+name: API
+
+on:
+  push:
+    branches: [main]
+    paths: ['apps/api/**', '.github/workflows/api.yml', 'docker-compose.yml']
+  pull_request:
+    paths: ['apps/api/**', '.github/workflows/api.yml', 'docker-compose.yml']
+
+concurrency:
+  group: api-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: apps/api
+
+jobs:
+  quality:
+    name: Lint · Typecheck · Unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: apps/api/package-lock.json
+
+      - run: npm ci
+
+      - name: Format kontrolü
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Birim testleri
+        run: npm test
+
+      - name: Derleme
+        run: npm run build
+
+  drift:
+    name: Migration ve OpenAPI güncelliği
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: apps/api/package-lock.json
+
+      - run: npm ci
+
+      # Şema değişti ama migration üretilmediyse burada yakalanır.
+      - name: Migration drift kontrolü
+        run: |
+          npm run db:generate
+          if ! git diff --quiet -- src/db/migrations; then
+            echo "::error::Drizzle şeması değişmiş ama migration üretilmemiş. 'npm run db:generate' çalıştırıp sonucu commit et."
+            git diff --stat -- src/db/migrations
+            exit 1
+          fi
+
+      # openapi.json mobil tarafın tipli client kaynağı; bayatlamamalı.
+      - name: OpenAPI drift kontrolü
+        run: |
+          npm run openapi:export
+          if ! git diff --quiet -- openapi.json; then
+            echo "::error::OpenAPI şeması bayat. 'npm run openapi:export' çalıştırıp sonucu commit et."
+            git diff --stat -- openapi.json
+            exit 1
+          fi
+        env:
+          LOG_LEVEL: silent
+          DATABASE_URL: postgres://kabx:kabx@localhost:5432/kabx
+          REDIS_URL: redis://localhost:6379
+
+  integration:
+    name: Entegrasyon testleri
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: apps/api/package-lock.json
+
+      - run: npm ci
+
+      # Postgres ve Redis'i Testcontainers kendisi başlatır; runner'daki
+      # Docker daemon yeterli, ayrıca `services:` tanımlamaya gerek yok.
+      - name: Entegrasyon testleri (Testcontainers)
+        run: npm run test:int
+
+  docker:
+    name: Docker imajı
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: İmajı derle
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/api
+          push: false
+          load: true
+          tags: kabx-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Tek imaj iki komut: ikisi de çalışabilir durumda mı?
+      - name: Giriş noktalarını doğrula
+        run: |
+          docker run --rm kabx-api:ci node -e "console.log('api entrypoint:', require('node:fs').existsSync('/app/dist/main.api.js'))"
+          docker run --rm kabx-api:ci node -e "console.log('worker entrypoint:', require('node:fs').existsSync('/app/dist/main.worker.js'))"

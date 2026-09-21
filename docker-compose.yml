@@ -1,0 +1,83 @@
+# Kabx yerel geliştirme ortamı (BACKEND_SPEC §2).
+# Kullanım: docker compose up -d
+# Hiçbir dış anahtar gerekmez; tüm dış servisler API tarafında `mock` modunda çalışır.
+#
+# Host portları bilerek standart dışı (5 ile başlıyor): geliştiricinin makinesinde
+# zaten çalışan bir Postgres/Redis/MinIO ile çakışmasın. Konteynerler kendi
+# aralarında standart portları kullanmaya devam eder.
+
+services:
+  postgres:
+    # pgvector eklentisi hazır gelen resmî imaj (BACKEND_SPEC §2: PostgreSQL 16+ ve pgvector)
+    image: pgvector/pgvector:pg17
+    container_name: kabx-postgres
+    environment:
+      POSTGRES_USER: kabx
+      POSTGRES_PASSWORD: kabx
+      POSTGRES_DB: kabx
+    ports:
+      - '55432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U kabx -d kabx']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: kabx-redis
+    # BullMQ gereği: iş verisi kaybolmasın diye appendonly açık.
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '56379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    # Yerelde Cloudflare R2'nin yerine geçen S3 uyumlu depolama.
+    # quay.io: MinIO imajlarının resmî dağıtım kanalı (Docker Hub'da anonim
+    # çekime kapalı).
+    image: quay.io/minio/minio:latest
+    container_name: kabx-minio
+    command: ['server', '/data', '--console-address', ':9001']
+    environment:
+      MINIO_ROOT_USER: kabxminio
+      MINIO_ROOT_PASSWORD: kabxminio
+    ports:
+      - '59000:9000'
+      - '59001:9001' # Web konsolu: http://localhost:59001
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'mc ready local']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio-init:
+    # Bucket'ı bir kez oluşturur ve çıkar. Görseller CDN'den servis edileceği
+    # için bucket public-read; imzalı URL gerektiren içerik Faz 3'te ayrılacak.
+    image: quay.io/minio/mc:latest
+    container_name: kabx-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 kabxminio kabxminio &&
+      mc mb --ignore-existing local/kabx-media &&
+      mc anonymous set download local/kabx-media &&
+      echo 'kabx-media bucket hazir'
+      "
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
