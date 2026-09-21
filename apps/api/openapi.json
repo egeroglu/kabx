@@ -1,0 +1,458 @@
+{
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/health/live": {
+      "get": {
+        "description": "Süreç ayakta mı? Bağımlılık kontrol etmez.",
+        "operationId": "HealthController_live",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Liveness probe",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/v1/health/ready": {
+      "get": {
+        "description": "Postgres, Redis ve kuyruk erişimi.",
+        "operationId": "HealthController_ready",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ],
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    },
+                    "error": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bağımlılıklardan biri erişilemiyor — Olası kodlar: SERVICE_UNAVAILABLE\n\nThe Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error",
+                        "shutting_down"
+                      ],
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    },
+                    "error": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Readiness probe",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Kabx API",
+    "description": "Kabx dijital gardırop ve stil uygulaması API dokümanı.\n\nHata cevapları her zaman `ErrorResponse` formatındadır; `error.code` mobil tarafta\ni18n anahtarı olarak kullanılır. Listeler cursor tabanlı sayfalama kullanır.",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "/",
+      "description": "Geçerli sunucu"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Kısa ömürlü access token"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INTERNAL_ERROR",
+                  "VALIDATION_FAILED",
+                  "NOT_FOUND",
+                  "METHOD_NOT_ALLOWED",
+                  "PAYLOAD_TOO_LARGE",
+                  "RATE_LIMITED",
+                  "SERVICE_UNAVAILABLE",
+                  "INVALID_CURSOR",
+                  "IDEMPOTENCY_KEY_REQUIRED",
+                  "APP_VERSION_UNSUPPORTED",
+                  "UNAUTHORIZED",
+                  "FORBIDDEN",
+                  "TOKEN_EXPIRED",
+                  "REFRESH_TOKEN_INVALID",
+                  "REFRESH_TOKEN_REUSED",
+                  "OTP_INVALID",
+                  "OTP_EXPIRED",
+                  "OTP_TOO_MANY_ATTEMPTS",
+                  "IDENTITY_PROVIDER_REJECTED",
+                  "ACCOUNT_DELETION_IN_PROGRESS",
+                  "PREMIUM_REQUIRED",
+                  "SUBSCRIPTION_SYNC_FAILED",
+                  "WEBHOOK_SIGNATURE_INVALID",
+                  "UPLOAD_NOT_FOUND",
+                  "UPLOAD_ALREADY_COMPLETED",
+                  "UPLOAD_OBJECT_MISSING",
+                  "UPLOAD_CONTENT_TYPE_UNSUPPORTED",
+                  "UPLOAD_TOO_LARGE",
+                  "UPLOAD_BATCH_TOO_LARGE",
+                  "WARDROBE_ITEM_NOT_FOUND",
+                  "WARDROBE_ITEM_NOT_READY",
+                  "AI_QUOTA_EXCEEDED",
+                  "AI_TAGGING_FAILED",
+                  "OUTFIT_NOT_FOUND",
+                  "OUTFIT_SLOTS_INVALID",
+                  "WEATHER_UNAVAILABLE",
+                  "LOCATION_REQUIRED",
+                  "DISCOVERY_CARD_NOT_FOUND",
+                  "QUIZ_SET_NOT_FOUND",
+                  "QUIZ_NOT_ENOUGH_SWIPES",
+                  "WISHLIST_ITEM_NOT_FOUND",
+                  "PRODUCT_NOT_FOUND",
+                  "LINK_PREVIEW_FAILED",
+                  "LINK_NOT_ALLOWED"
+                ],
+                "description": "Mobilde i18n anahtarı olarak kullanılır"
+              },
+              "message": {
+                "type": "string",
+                "description": "Geliştirici içindir; kullanıcıya gösterilmez"
+              },
+              "details": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false,
+        "description": "Kabx API hata cevabı"
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "nextCursor": {
+            "description": "Sonraki sayfa yoksa null",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "nextCursor",
+          "hasMore"
+        ],
+        "additionalProperties": false,
+        "description": "Sayfalama bilgisi"
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "error",
+              "shutting_down"
+            ]
+          },
+          "info": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "error": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "details": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "status",
+          "details"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
