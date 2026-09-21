@@ -7,7 +7,7 @@ Genç kadınlara yönelik, eğlenceli ve oyunsu dijital gardırop ve stil uygula
 | Yol | İçerik |
 | --- | --- |
 | `apps/mobile` | Expo (React Native) mobil uygulama — şu an **demo**: mock veri, gerçek backend yok |
-| `apps/api` | Backend (NestJS + Postgres/pgvector + Redis) — **Faz 0 tamam**: iskelet ayakta |
+| `apps/api` | Backend (NestJS + Postgres/pgvector + Redis) — **Faz 1 tamam**: iskelet, kimlik ve hesap |
 | `docs/MOBILE_SPEC.md` | Mobil v1 geliştirme prompt'u (Claude Code için) |
 | `docs/BACKEND_SPEC.md` | Backend v1 geliştirme prompt'u (Claude Code için) |
 | `docs/design/` | Tasarım kaynakları: `tokens.ts` ve ekranların HTML tasarım dosyaları |

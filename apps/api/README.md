@@ -63,6 +63,10 @@ src/
   db/             Drizzle şeması, migration'lar, seed
   queue/          BullMQ bağlantısı, kuyruk kaydı, worker çalışma zamanı
   health/         /v1/health/live, /v1/health/ready
+  modules/
+    auth/         Apple/Google/OTP girişi, JWT + refresh rotasyonu, guard'lar
+    users/        profil, cihazlar, rıza kayıtları, hesap silme, veri dışa aktarma
+    email/        transactional e-posta (Resend / mock)
 ```
 
 ### Bilinmesi gereken kararlar
@@ -75,6 +79,11 @@ src/
 - **`nestjs-zod` kullanılmıyor.** 5.x peer'ları NestJS 12'yi desteklemiyor;
   Zod 4'ün yerleşik `z.toJSONSchema()`'sı üzerine ince bir köprü yazıldı.
 - **`class-validator` yok.** Tek doğrulama yolu Zod.
+- **DTO'lar SINIF olmalı.** Controller'da `@Body() body: SomeDto` yazılır.
+  `@Body() body: z.infer<typeof schema>` yazmak doğrulamayı **sessizce** devre
+  dışı bırakır: `emitDecoratorMetadata` tip takma adlarını `Object` olarak
+  yayar ve pipe DTO'yu tanımaz. `test/unit/controller-validation.spec.ts` bunu
+  her controller için kontrol eder; yeni controller eklerken o listeye ekle.
 
 ### Hata sözleşmesi
 
@@ -90,6 +99,45 @@ ve `openapi.json`'da enum olarak yayımlanır. Bir kod yayımlandıktan sonra
 yeniden adlandırılmaz.
 
 Başkasının kaynağına erişim **404** döner (403 değil): kaynağın varlığı sızmasın.
+
+### Kimlik doğrulama
+
+Üç giriş yöntemi de aynı yere çıkar: kullanıcı bulunur ya da oluşturulur ve bir
+oturum verilir.
+
+- **Apple / Google:** ID token sunucuda doğrulanır — JWKS'ten imza, `iss`, `aud`
+  ve süre. `aud` mutlaka kendi client ID'lerimizle karşılaştırılır; aksi halde
+  başka bir uygulama için verilmiş geçerli bir token kabul edilirdi.
+- **E-posta OTP:** 6 haneli kod, HMAC'lenerek saklanır. Kod isteği, adres
+  kayıtlı olsun olmasın **aynı cevabı** döner (hesap sayımı önlenir).
+- **Hesap birleştirme:** önce `(provider, subject)`, sonra **doğrulanmış**
+  e-posta ile eşleşme aranır. Doğrulanmamış e-postayla asla eşleştirme yapılmaz.
+
+**Oturum:** 15 dakikalık access JWT + rotasyonlu refresh token. Refresh token
+düz metin saklanmaz; yalnızca HMAC'i. Her yenileme eskisini tüketir ve yenisini
+verir. Aynı token ikinci kez gelirse çalınmış sayılır ve o zincirin **tamamı**
+iptal edilir. Sahiplenme atomik bir `UPDATE` ile yapılır, böylece eşzamanlı iki
+yenilemede yalnızca biri geçebilir.
+
+Guard'lar **global**: uçlar varsayılan olarak kapalıdır, açık olanlar `@Public()`
+ile işaretlenir. Tersi olsaydı yeni bir uca guard eklemeyi unutmak sessizce veri
+sızdırırdı. Kullanıcı her istekte DB'den okunur; rol değişikliği ve hesap silme
+access token'ın ömrünü beklemez.
+
+**Yerel geliştirme:** `IDENTITY_PROVIDER_MODE=mock` iken belirteç
+`mock:<subject>:<email>:<ad>` biçimindedir; gerçek Apple/Google hesabı
+gerekmez. E-posta sağlayıcısı da mock: OTP kodu terminale yazılır.
+
+### KVKK
+
+- **Rıza kayıtları** eklenir, güncellenmez ve silinmez. Metin değişince
+  `CONSENT_*_VERSION` yükseltilir; `GET /v1/me` eksik rızaları `pendingConsents`
+  içinde döner.
+- **Hesap silme** (`DELETE /v1/me`) hemen 202 döner: hesap `pending_deletion`
+  işaretlenir ve tüm oturumlar düşer. Asıl silme kuyrukta yapılır; tüm ilişkili
+  satırlar `ON DELETE CASCADE` ile gider. Geri alınamaz.
+- **Veri dışa aktarma** (`POST /v1/me/export`) kuyruğa iş atar; istemci durumu
+  sorgular. Sürmekte olan iş varken yenisi açılmaz.
 
 ### Sayfalama
 
@@ -127,7 +175,7 @@ değişkeni olarak gelir. `.env` yüklense bile tanımlı ortam değişkenlerini
 | Faz | Durum |
 | --- | --- |
 | 0 — İskelet | ✅ |
-| 1 — Kimlik ve hesap | ⏳ |
+| 1 — Kimlik ve hesap | ✅ |
 | 2 — Abonelik | ⏳ |
 | 3 — Medya ve gardırop | ⏳ |
 | 4 — AI pipeline | ⏳ |
